@@ -42,6 +42,8 @@
             return{
                 price: oldState.price*randomPercentage
             };
+
+
         });*/
     }
     render() {

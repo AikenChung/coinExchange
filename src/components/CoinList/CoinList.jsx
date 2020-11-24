@@ -17,7 +17,7 @@ export default class CoinList extends Component {
                 <th>Name</th>
                 <th>Ticker</th>
                 <th>Price</th>
-                <th>Balance</th>
+                {this.props.showCoinBalance ? <th>Balance</th>:<></>}
                 <th>Action</th>
               </tr>
             </thead>

@@ -1,6 +1,5 @@
 import React from 'react';
 import CoinList from './components/CoinList/CoinList';
-import CoinListHiddenBalance from './components/CoinList/CoinListHiddenBalance';
 import CoinExchangeHeader from './components/CoinExchangeHeader/CoinExchangeHeader';
 import AccountBalance from './components/AccountBalance/AccountBalance';
 //import { uuid } from 'uuidv4';
@@ -82,16 +81,16 @@ class App extends React.Component {
   }
   
   render(){
-    
-    let coinListAll = <CoinList coinData={this.state.coinData} handleRefresh={this.handleRefresh} showCoinBalance={this.state.showBalance} />;
-    let coinListHidden = <CoinListHiddenBalance coinData={this.state.coinData} handleRefresh={this.handleRefresh} showCoinBalance={this.state.showBalance} />;
-    const coinListDisplay = this.state.showBalance ? coinListAll : coinListHidden;
-    
+
     return (
       <AppDiv className="App">
         <CoinExchangeHeader />
-        <AccountBalance amount={this.state.balance} showBalanceButton={this.state.showBalance} handleShowBalanceClick={this.handleShowBalanceClick}/>
-        {coinListDisplay}
+        <AccountBalance amount={this.state.balance} 
+                        showBalanceButton={this.state.showBalance} 
+                        handleShowBalanceClick={this.handleShowBalanceClick}/>
+        <CoinList coinData={this.state.coinData} 
+                  handleRefresh={this.handleRefresh} 
+                  showCoinBalance={this.state.showBalance} />;
       </AppDiv>
     );
   }

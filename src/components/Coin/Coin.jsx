@@ -45,12 +45,13 @@
         });*/
     }
     render() {
+         let coinBalanceDisplay = this.props.showCoinBalance ? <Styletd>${this.props.balance}</Styletd> : '';
          return (
             <tr className="coin-row">
                 <Styletd>{this.props.name}</Styletd>
                 <Styletd>{this.props.ticker}</Styletd>
                 <Styletd>${this.props.price}</Styletd>
-
+                {coinBalanceDisplay}
                 <Styletd>
                     <form action="#" method="POST">
                         <button onClick={this.handleClick}>Refresh</button>
@@ -64,5 +65,7 @@
  Coin.propTypes = {
      name: PropTypes.string.isRequired,
      ticker: PropTypes.string.isRequired,
-     price: PropTypes.number.isRequired
+     //balance: PropTypes.number.isRequired,
+     price: PropTypes.number.isRequired,
+     showCoinBalance: PropTypes.bool.isRequired
  }

@@ -8,7 +8,7 @@ display: inline-block;
 font-size: 1.4rem;
 `;
 
-export default class CoinList extends Component {
+export default class CoinListHiddenBalance extends Component {
     render() {
         return (
             <CoinTable className="coin-table">
@@ -17,19 +17,17 @@ export default class CoinList extends Component {
                 <th>Name</th>
                 <th>Ticker</th>
                 <th>Price</th>
-                <th>Balance</th>
                 <th>Action</th>
               </tr>
             </thead>
             <tbody>
               {
-                this.props.coinData.map(({name, ticker, price, balance}) =>
+                this.props.coinData.map(({name, ticker, price}) =>
                   <Coin key={ticker}
                         handleRefresh={this.props.handleRefresh}
-                        showCoinBalance = {this.props.showCoinBalance} 
+                        showCoinBalance = {this.props.showCoinBalance}
                         name={name} 
                         ticker ={ticker} 
-                        balance = {balance}
                         price={price} />
                 )
               }

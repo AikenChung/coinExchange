@@ -28,7 +28,7 @@ export default class AccountBalance extends Component {
         const balanceDisplay = this.props.showBalanceButton ? balanceContent : '';
         return (
             <Section>
-                    {balanceDisplay}
+                    <>{balanceDisplay}</>
                 <button onClick={this.handleShowBalanceClickButton}>{buttonText}</button>
             </Section>
         );

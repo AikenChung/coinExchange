@@ -13,7 +13,6 @@
      
     constructor(props){
         super(props);       
-        this.handleClick = this.handleClick.bind(this);
     }
     /*
     componentDidMount(){
@@ -33,7 +32,7 @@
         setInterval(callback, 5000);
     }*/
     
-    handleClick(event){
+    handleClick = (event) => {
         // Prevent the default action of submitting the form
         event.preventDefault();
         this.props.handleRefresh(this.props.ticker);

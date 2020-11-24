@@ -24,7 +24,7 @@ export default class AccountBalance extends Component {
 
     render() {
         const buttonText = this.props.showBalanceButton ? 'Hide Balance' : 'Show Balance';
-        let balanceContent = 'Balance$'+ this.props.amount;
+        let balanceContent = 'Balance $'+ this.props.amount;
         const balanceDisplay = this.props.showBalanceButton ? balanceContent : '';
         return (
             <Section>

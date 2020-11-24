@@ -45,7 +45,7 @@
         });*/
     }
     render() {
-         let coinBalanceDisplay = this.props.showCoinBalance ? <Styletd>${this.props.balance}</Styletd> : '';
+         let coinBalanceDisplay = this.props.showCoinBalance ? <Styletd>${this.props.balance}</Styletd> : <></>;
          return (
             <tr className="coin-row">
                 <Styletd>{this.props.name}</Styletd>

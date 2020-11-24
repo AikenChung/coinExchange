@@ -2,7 +2,7 @@ import React from 'react';
 import CoinList from './components/CoinList/CoinList';
 import CoinExchangeHeader from './components/CoinExchangeHeader/CoinExchangeHeader';
 import AccountBalance from './components/AccountBalance/AccountBalance';
-import { uuid } from 'uuidv4';
+//import { uuid } from 'uuidv4';
 import styled from 'styled-components';
 
 const AppDiv = styled.div`
@@ -19,31 +19,26 @@ class App extends React.Component {
       balance: 10000,
       coinData:[
         {
-          key:uuid(),
           name: 'Bitcoin',
           ticker:'BTC',
           price: 9999.99,
         },
         {
-          key:uuid(),
           name:'Ethereum',
           ticker:'ETH',
           price: 289.99
         },
         {
-          key:uuid(),
           name: 'Tether',
           ticker:'USDT',
           price: 19.99
         },
         {
-          key:uuid(),
           name: 'Ripple',
           ticker:'XRP',
           price: 0.29
         },
         {
-          key:uuid(),
           name: 'Bitcoin Cash',
           ticker:'BCH',
           price: 207.75
@@ -54,14 +49,31 @@ class App extends React.Component {
         <Coin name="Ripple" ticker="XRP" price={0.29}/>*/
       ]
     }
+    this.handleRefresh = this.handleRefresh.bind(this);
   }
-  render(){
+  
+  handleRefresh(valueChangeTicker){
+    const newCoinData = this.state.coinData.map( function({ticker, name, price}){
+      let newPrice = price;
+      if(valueChangeTicker === ticker){
+        const randomPercentage = 0.995 + Math.random() * 0.01;
+        newPrice = newPrice*randomPercentage;
+      }
+      return{
+        ticker: ticker,
+        name: name,
+        price: newPrice
+      }
+    });
+    this.setState({coinData: newCoinData});
+  }
 
+  render(){
     return (
       <AppDiv className="App">
         <CoinExchangeHeader />
         <AccountBalance amount={this.state.balance} />
-        <CoinList coinData={this.state.coinData} />
+        <CoinList coinData={this.state.coinData} handleRefresh={this.handleRefresh} />
       </AppDiv>
     );
   }

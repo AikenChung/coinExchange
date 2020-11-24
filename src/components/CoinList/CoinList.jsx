@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Coin from '../Coin/Coin';
 import styled from 'styled-components';
 
-const coinTable = styled.table`
+const CoinTable = styled.table`
 margin: 50px auto 50px auto;
 display: inline-block;
 font-size: 1.4rem;
@@ -11,7 +11,7 @@ font-size: 1.4rem;
 export default class CoinList extends Component {
     render() {
         return (
-            <coinTable className="coin-table">
+            <CoinTable className="coin-table">
             <thead>
               <tr>
                 <th>Name</th>
@@ -21,12 +21,16 @@ export default class CoinList extends Component {
             </thead>
             <tbody>
               {
-                this.props.coinData.map(value =>
-                  <Coin key={value.key} name={value.name} ticker ={value.ticker} price={value.price} />
+                this.props.coinData.map(({name, ticker, price}) =>
+                  <Coin key={ticker}
+                        handleRefresh={this.props.handleRefresh} 
+                        name={name} 
+                        ticker ={ticker} 
+                        price={price} />
                 )
               }
             </tbody>
-          </coinTable>
+          </CoinTable>
         )
     }
 }

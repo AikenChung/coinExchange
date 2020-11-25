@@ -2,9 +2,10 @@ import React, {useState, useEffect} from 'react';
 import CoinList from './components/CoinList/CoinList';
 import CoinExchangeHeader from './components/CoinExchangeHeader/CoinExchangeHeader';
 import AccountBalance from './components/AccountBalance/AccountBalance';
-//import { uuid } from 'uuidv4';
 import styled from 'styled-components';
 import axios from 'axios';
+import 'bootswatch/dist/flatly/bootstrap.min.css';
+import '@fortawesome/fontawesome-free/js/all';
 
 const AppDiv = styled.div`
 text-align: center;
@@ -16,19 +17,13 @@ const COIN_COUNT = 10;
 const tickerUrl = 'https://api.coinpaprika.com/v1/tickers/';
 const formatPrice = price => parseFloat(Number(price).toFixed(4));
 
-//class App extends React.Component { // class component
 function App (props) {
-  /*state={
-    balance: 10000,
-    showBalance: true,     
-    coinData:[]
-  }*/
+
   const [balance, setBalance] = useState(10000);
-  const [showBalance, setShowBalance] = useState(true);
+  const [showBalance, setShowBalance] = useState(false);
   const [coinData, setCoinData] = useState([]);
 
   const componentDidMount = async () =>{
-    //let response = await axios.get('https://api.coinpaprika.com/v1/tickers');
     let response = await axios.get('https://api.coinpaprika.com/v1/coins');
     let coinIds = response.data.slice(0,COIN_COUNT).map( coin => coin.id);   
     const promises = coinIds.map(id => axios.get(tickerUrl + id));   
@@ -43,8 +38,6 @@ function App (props) {
         price: formatPrice(coin.quotes.USD.price)
       };
     });
-    // Retrieve the prices
-    //this.setState({ coinData: coinPriceData });
     setCoinData(coinPriceData);
   };
 
@@ -52,19 +45,30 @@ function App (props) {
      if( coinData.length === 0 ){
         // component did mount
         componentDidMount();
-     }else{
-       // component did update
      }
   });
 
-
+  const handleAddBalance = () => {
+    setBalance(oldValue => oldValue+1200);
+  }
   
+  const handleTransaction = (isBuy, valueChangeId) => {
+    var balancechange = isBuy ? 1 : -1;
+    const newCoinData = coinData.map(function(values){
+      let newValues = {...values};
+      if(valueChangeId === values.key){
+        newValues.balance += balancechange;
+        setBalance(oldBalance => oldBalance - balancechange * newValues.price);
+      }
+      return newValues;
+    });
+    setCoinData(newCoinData);
+  }
 
   const handleRefresh = async (key) => {
     console.log(key);
     let updatedCoinData = await axios.get(tickerUrl + key);
     console.log(updatedCoinData.data.quotes.USD.price);
-    //const newCoinData = this.state.coinData.map( function( values ){
     const newCoinData = coinData.map( function( values ){
       let newValue = { ...values };
       if(key === values.key){
@@ -72,33 +76,26 @@ function App (props) {
       }
       return newValue;
     });  
-    //this.setState({coinData: newCoinData});
     setCoinData(newCoinData);
   }
 
   const handleShowBalanceClick = () => {
-    /*this.setState( function(oldState){
-      return{
-        ...oldState,
-        showBalance: !oldState.showBalance
-      }
-    });*/
     setShowBalance(oldValue => ! oldValue);
   }
-  
-  //render(){
-    return (
-      <AppDiv className="App">
-        <CoinExchangeHeader />
-        <AccountBalance amount={balance} 
-                        showBalanceButton={showBalance} 
-                        handleShowBalanceClick={handleShowBalanceClick}/>
-        <CoinList coinData={coinData} 
-                  handleRefresh={handleRefresh} 
-                  showCoinBalance={showBalance} />;
-      </AppDiv>
-    );
-  //}
+
+  return (
+    <AppDiv className="App">
+      <CoinExchangeHeader />
+      <AccountBalance amount={balance} 
+                      showBalanceButton={showBalance} 
+                      handleShowBalanceClick={handleShowBalanceClick}
+                      handleAddBalance={handleAddBalance}/>
+      <CoinList coinData={coinData} 
+                handleRefresh={handleRefresh}
+                handleTransaction={handleTransaction} 
+                showCoinBalance={showBalance} />;
+    </AppDiv>
+  );
 }
 
 export default App;

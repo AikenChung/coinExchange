@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import CoinList from './components/CoinList/CoinList';
 import CoinExchangeHeader from './components/CoinExchangeHeader/CoinExchangeHeader';
 import AccountBalance from './components/AccountBalance/AccountBalance';
@@ -16,22 +16,25 @@ const COIN_COUNT = 10;
 const tickerUrl = 'https://api.coinpaprika.com/v1/tickers/';
 const formatPrice = price => parseFloat(Number(price).toFixed(4));
 
-class App extends React.Component {
-  
-  state={
+//class App extends React.Component { // class component
+function App (props) {
+  /*state={
     balance: 10000,
     showBalance: true,     
     coinData:[]
-  }
-  
-  componentDidMount = async () =>{
+  }*/
+  const [balance, setBalance] = useState(10000);
+  const [showBalance, setShowBalance] = useState(true);
+  const [coinData, setCoinData] = useState([]);
+
+  const componentDidMount = async () =>{
     //let response = await axios.get('https://api.coinpaprika.com/v1/tickers');
     let response = await axios.get('https://api.coinpaprika.com/v1/coins');
     let coinIds = response.data.slice(0,COIN_COUNT).map( coin => coin.id);   
     const promises = coinIds.map(id => axios.get(tickerUrl + id));   
     const coinData = await Promise.all(promises);
     const coinPriceData = coinData.map(function(response){
-      const coin = response.data;
+    const coin = response.data;
       return {
         key: coin.id,
         name: coin.name,
@@ -41,46 +44,61 @@ class App extends React.Component {
       };
     });
     // Retrieve the prices
-    this.setState({ coinData: coinPriceData });
+    //this.setState({ coinData: coinPriceData });
+    setCoinData(coinPriceData);
   };
+
+  useEffect( function(){
+     if( coinData.length === 0 ){
+        // component did mount
+        componentDidMount();
+     }else{
+       // component did update
+     }
+  });
+
+
   
 
-  handleRefresh = async (key) => {
+  const handleRefresh = async (key) => {
     console.log(key);
     let updatedCoinData = await axios.get(tickerUrl + key);
-    const newCoinData = this.state.coinData.map( function( values ){
+    console.log(updatedCoinData.data.quotes.USD.price);
+    //const newCoinData = this.state.coinData.map( function( values ){
+    const newCoinData = coinData.map( function( values ){
       let newValue = { ...values };
-      if(key === values.Id){
+      if(key === values.key){
         newValue.price = formatPrice(updatedCoinData.data.quotes.USD.price);
       }
       return newValue;
     });  
-    this.setState({coinData: newCoinData});
+    //this.setState({coinData: newCoinData});
+    setCoinData(newCoinData);
   }
 
-  handleShowBalanceClick = () => {
-    this.setState( function(oldState){
+  const handleShowBalanceClick = () => {
+    /*this.setState( function(oldState){
       return{
         ...oldState,
         showBalance: !oldState.showBalance
       }
-    });
+    });*/
+    setShowBalance(oldValue => ! oldValue);
   }
   
-  render(){
-
+  //render(){
     return (
       <AppDiv className="App">
         <CoinExchangeHeader />
-        <AccountBalance amount={this.state.balance} 
-                        showBalanceButton={this.state.showBalance} 
-                        handleShowBalanceClick={this.handleShowBalanceClick}/>
-        <CoinList coinData={this.state.coinData} 
-                  handleRefresh={this.handleRefresh} 
-                  showCoinBalance={this.state.showBalance} />;
+        <AccountBalance amount={balance} 
+                        showBalanceButton={showBalance} 
+                        handleShowBalanceClick={handleShowBalanceClick}/>
+        <CoinList coinData={coinData} 
+                  handleRefresh={handleRefresh} 
+                  showCoinBalance={showBalance} />;
       </AppDiv>
     );
-  }
+  //}
 }
 
 export default App;

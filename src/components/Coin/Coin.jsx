@@ -1,5 +1,6 @@
  
- import React, { Component } from 'react';
+// import React, { Component } from 'react'; // For class component
+import React from 'react';
  //import './Coin.css';
  import PropTypes from 'prop-types';
  import styled from 'styled-components';
@@ -9,29 +10,29 @@
     width: 25vh;
 `;
 
- export default class Coin extends Component {
-
-    handleClick = (event) => {
+ //export default class Coin extends Component { // Class component
+ export default function Coin (props) { // functional component
+    const handleClick = (event) => {
         // Prevent the default action of submitting the form
         event.preventDefault();
-        this.props.handleRefresh(this.props.Id);
+        props.handleRefresh(props.Id); // If it's the class component, add this. in the begining
     }
-    render() {
-         let coinBalanceDisplay = this.props.showCoinBalance ? <Styletd>${this.props.balance}</Styletd> : <></>;
+    //render() {
+         let coinBalanceDisplay = props.showCoinBalance ? <Styletd>${props.balance}</Styletd> : <></>;
          return (
             <tr className="coin-row">
-                <Styletd>{this.props.name}</Styletd>
-                <Styletd>{this.props.ticker}</Styletd>
-                <Styletd>${this.props.price}</Styletd>
+                <Styletd>{props.name}</Styletd>
+                <Styletd>{props.ticker}</Styletd>
+                <Styletd>${props.price}</Styletd>
                 {coinBalanceDisplay}
                 <Styletd>
                     <form action="#" method="POST">
-                        <button onClick={this.handleClick}>Refresh</button>
+                        <button onClick={handleClick}>Refresh</button>
                     </form>
                 </Styletd>
             </tr>
          );
-     }
+     //}
 }
  
  Coin.propTypes = {

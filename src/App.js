@@ -14,6 +14,7 @@ color: #cccccc;
 
 const COIN_COUNT = 10;
 const tickerUrl = 'https://api.coinpaprika.com/v1/tickers/';
+const formatPrice = price => parseFloat(Number(price).toFixed(4));
 
 class App extends React.Component {
   
@@ -36,7 +37,7 @@ class App extends React.Component {
         name: coin.name,
         ticker: coin.symbol,          
         balance: 0,
-        price: parseFloat(Number(coin.quotes.USD.price).toFixed(4))
+        price: formatPrice(coin.quotes.USD.price)
       };
     });
     // Retrieve the prices
@@ -50,7 +51,7 @@ class App extends React.Component {
     const newCoinData = this.state.coinData.map( function( values ){
       let newValue = { ...values };
       if(key === values.Id){
-        newValue.price = parseFloat(Number(updatedCoinData.data.price).toFixed(4));
+        newValue.price = formatPrice(updatedCoinData.data.quotes.USD.price);
       }
       return newValue;
     });  

@@ -10,40 +10,11 @@
 `;
 
  export default class Coin extends Component {
-     
-    constructor(props){
-        super(props);       
-    }
-    /*
-    componentDidMount(){
-        const callback = () => {
-            // set the state to a new random value
-            const randomPercentage = 0.995 + Math.random() * 0.01;
-            // DON'T DO THIS:
-            // this.props.price = this.props.price * randomPercentage;
-            // this.props.price only can be used in the constructor
-            // There is a specific way to update the state outside of the constructor
-            this.setState( function(oldState) {
-                return{
-                    price: oldState.price * randomPercentage
-                };
-            });
-        };
-        setInterval(callback, 5000);
-    }*/
-    
+
     handleClick = (event) => {
         // Prevent the default action of submitting the form
         event.preventDefault();
-        this.props.handleRefresh(this.props.ticker);
-        /*const randomPercentage = 0.995 + Math.random() * 0.01;
-        this.setState( function(oldState) {
-            return{
-                price: oldState.price*randomPercentage
-            };
-
-
-        });*/
+        this.props.handleRefresh(this.props.Id);
     }
     render() {
          let coinBalanceDisplay = this.props.showCoinBalance ? <Styletd>${this.props.balance}</Styletd> : <></>;

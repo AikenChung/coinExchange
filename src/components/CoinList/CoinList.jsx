@@ -9,6 +9,7 @@ font-size: 1.4rem;
 `;
 
 export default class CoinList extends Component {
+    
     render() {
         return (
             <CoinTable className="coin-table">
@@ -23,14 +24,16 @@ export default class CoinList extends Component {
             </thead>
             <tbody>
               {
-                this.props.coinData.map(({name, ticker, price, balance}) =>
-                  <Coin key={ticker}
-                        handleRefresh={this.props.handleRefresh}
-                        showCoinBalance = {this.props.showCoinBalance} 
-                        name={name} 
-                        ticker ={ticker} 
-                        balance = {balance}
-                        price={price} />
+                this.props.coinData.map(({key, name, ticker, price, balance}) =>
+                  <Coin
+                    key={key} 
+                    Id={key}                       
+                    name={name} 
+                    ticker ={ticker} 
+                    balance = {balance}
+                    price={price} 
+                    handleRefresh={this.props.handleRefresh}
+                    showCoinBalance = {this.props.showCoinBalance} />
                 )
               }
             </tbody>

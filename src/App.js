@@ -4,6 +4,7 @@ import CoinExchangeHeader from './components/CoinExchangeHeader/CoinExchangeHead
 import AccountBalance from './components/AccountBalance/AccountBalance';
 //import { uuid } from 'uuidv4';
 import styled from 'styled-components';
+import axios from 'axios';
 
 const AppDiv = styled.div`
 text-align: center;
@@ -11,65 +12,52 @@ background-color: rgb(20,56,97);
 color: #cccccc;
 `;
 
-//function App() {
+const COIN_COUNT = 10;
+const tickerUrl = 'https://api.coinpaprika.com/v1/tickers/';
+
 class App extends React.Component {
   
   state={
     balance: 10000,
     showBalance: true,     
-    coinData:[
-      {
-        name: 'Bitcoin',
-        ticker:'BTC',
-        balance: 0.5,
-        price: 9999.99,
-      },
-      {
-        name:'Ethereum',
-        ticker:'ETH',
-        balance: 32.1,
-        price: 289.99
-      },
-      {
-        name: 'Tether',
-        ticker:'USDT',
-        balance: 0.1,
-        price: 19.99
-      },
-      {
-        name: 'Ripple',
-        ticker:'XRP',
-        balance: 0.23,
-        price: 0.29
-      },
-      {
-        name: 'Bitcoin Cash',
-        ticker:'BCH',
-        balance: 0.17,
-        price: 207.75
-      }       
-    ]
+    coinData:[]
   }
   
-  handleRefresh = (valueChangeTicker) => {
+  componentDidMount = async () =>{
+    //let response = await axios.get('https://api.coinpaprika.com/v1/tickers');
+    let response = await axios.get('https://api.coinpaprika.com/v1/coins');
+    let coinIds = response.data.slice(0,COIN_COUNT).map( coin => coin.id);   
+    const promises = coinIds.map(id => axios.get(tickerUrl + id));   
+    const coinData = await Promise.all(promises);
+    const coinPriceData = coinData.map(function(response){
+      const coin = response.data;
+      return {
+        key: coin.id,
+        name: coin.name,
+        ticker: coin.symbol,          
+        balance: 0,
+        price: parseFloat(Number(coin.quotes.USD.price).toFixed(4))
+      };
+    });
+    // Retrieve the prices
+    this.setState({ coinData: coinPriceData });
+  };
+  
+
+  handleRefresh = async (key) => {
+    console.log(key);
+    let updatedCoinData = await axios.get(tickerUrl + key);
     const newCoinData = this.state.coinData.map( function( values ){
       let newValue = { ...values };
-      if(valueChangeTicker === values.ticker){
-        const randomPercentage = 0.995 + Math.random() * 0.01;
-        //newPrice = newPrice*randomPercentage;
-        newValue.price *= randomPercentage;
+      if(key === values.Id){
+        newValue.price = parseFloat(Number(updatedCoinData.data.price).toFixed(4));
       }
       return newValue;
-    });
+    });  
     this.setState({coinData: newCoinData});
   }
 
   handleShowBalanceClick = () => {
-    /*if(this.state.showBalance){
-      this.setState({showBalance: false});
-    }else{
-      this.setState({showBalance: true}); 
-    }*/
     this.setState( function(oldState){
       return{
         ...oldState,
